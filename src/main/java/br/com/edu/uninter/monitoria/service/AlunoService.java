@@ -30,13 +30,31 @@ public class AlunoService {
     @Transactional(readOnly = true)
     public List<AlunoResponse> listarPorTipo(TipoAluno tipo) {
 
-        if (tipo == TipoAluno.MONITOR) {
-            List<Aluno> alunos = alunoRepository.findByTipoWithMaterias(tipo);
-        }
-        else {
-            List<Aluno> alunos = alunoRepository.findByTipo(tipo);
-        }
-        return null;
+        List<Aluno> alunos = (tipo == TipoAluno.MONITOR)
+                ? alunoRepository.findByTipoWithMaterias(tipo)
+                : alunoRepository.findByTipo(tipo);
+
+        return alunos.stream()
+                .map(alunoMapper::toDto)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<AlunoResponse> listarPorMateria(Long materiaId) {
+        List<Aluno> alunos = alunoRepository.findByMateriaId(materiaId);
+
+        return alunos.stream()
+                .map(alunoMapper::toDto)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<AlunoResponse> listarTodos() {
+        List<Aluno> alunos = alunoRepository.findAll();
+
+        return alunos.stream()
+                .map(alunoMapper::toDto)
+                .toList();
     }
 
     @Transactional
