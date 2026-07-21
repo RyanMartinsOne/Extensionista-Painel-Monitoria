@@ -1,0 +1,98 @@
+package br.com.edu.uninter.monitoria.service;
+
+import br.com.edu.uninter.monitoria.dto.AlunoRequest;
+import br.com.edu.uninter.monitoria.dto.AlunoResponse;
+import br.com.edu.uninter.monitoria.mapper.AlunoMapper;
+import br.com.edu.uninter.monitoria.model.Aluno;
+import br.com.edu.uninter.monitoria.model.Materia;
+import br.com.edu.uninter.monitoria.model.TipoAluno;
+import br.com.edu.uninter.monitoria.repository.AlunoRepository;
+import br.com.edu.uninter.monitoria.repository.EncontroRepository;
+import br.com.edu.uninter.monitoria.repository.MateriaRepository;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+@Service
+@RequiredArgsConstructor
+public class AlunoService {
+
+    private final AlunoRepository alunoRepository;
+    private final AlunoMapper alunoMapper;
+    private final MateriaRepository materiaRepository;
+    private final EncontroRepository encontroRepository;
+
+    @Transactional(readOnly = true)
+    public List<AlunoResponse> listarPorTipo(TipoAluno tipo) {
+
+        if (tipo == TipoAluno.MONITOR) {
+            List<Aluno> alunos = alunoRepository.findByTipoWithMaterias(tipo);
+        }
+        else {
+            List<Aluno> alunos = alunoRepository.findByTipo(tipo);
+        }
+        return null;
+    }
+
+    @Transactional
+    public AlunoResponse salvarAluno(AlunoRequest request) {
+        Aluno aluno = alunoMapper.toEntity(request);
+
+        vincularMaterias(aluno, request.materiaIds());
+
+        Aluno alunoSalvo = alunoRepository.save(aluno);
+
+        return alunoMapper.toDto(alunoSalvo);
+    }
+
+    @Transactional
+    public AlunoResponse atualizarAluno(Long id, AlunoRequest request) {
+        Aluno aluno = alunoRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Não existe aluno com id: " + id));
+
+        aluno.setNome(request.nome());
+        aluno.setTelefone(request.telefone());
+        aluno.setTipo(request.tipo());
+        aluno.setDisponibilidade(request.disponibilidade());
+
+        vincularMaterias(aluno, request.materiaIds());
+
+        Aluno alunoAtualizado = alunoRepository.save(aluno);
+
+        return alunoMapper.toDto(alunoAtualizado);
+    }
+
+    @Transactional
+    public void removerAluno(Long id) {
+
+        if (!alunoRepository.existsById(id)) {
+            throw new EntityNotFoundException("Não existe aluno com id: " + id);
+        }
+        else if (encontroRepository.existsByMonitorIdOrBeneficiadoId(id, id)) {
+            throw new IllegalArgumentException("Não é possível excluir, este aluno participa " +
+                    "de um ou mais encontros registrado.");
+        }
+
+        alunoRepository.deleteById(id);
+    }
+
+    private void vincularMaterias(Aluno aluno, Set<Long> materiaIds) {
+        if (materiaIds == null || materiaIds.isEmpty()) {
+            aluno.setMaterias(new HashSet<>());
+            return;
+        }
+
+        List<Materia> materiasEncontradas = materiaRepository.findAllById(materiaIds);
+
+        if (materiasEncontradas.size() != materiaIds.size()) {
+            throw new EntityNotFoundException("Uma ou mais matérias informadas não foram encontradas!");
+        }
+
+        aluno.setMaterias(new HashSet<>(materiasEncontradas));
+    }
+}

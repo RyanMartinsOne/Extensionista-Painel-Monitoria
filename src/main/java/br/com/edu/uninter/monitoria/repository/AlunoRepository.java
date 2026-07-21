@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface AlunoRepository extends JpaRepository<Aluno, Long> {
 
-    List<Aluno> findByTipo (@Param("tipo") TipoAluno tipo);
+    List<Aluno> findByTipo (TipoAluno tipo);
 
     // Distinc evita repetir aluno mesmo se ele tiver várias materias
     @Query("SELECT DISTINCT a FROM Aluno a LEFT JOIN FETCH a.materias WHERE a.tipo = :tipo")
