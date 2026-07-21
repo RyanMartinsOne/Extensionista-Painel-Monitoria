@@ -100,8 +100,13 @@ public class AlunoService {
     }
 
     private void vincularMaterias(Aluno aluno, Set<Long> materiaIds) {
-        if (materiaIds == null || materiaIds.isEmpty()) {
+        if (aluno.getMaterias() == null) {
             aluno.setMaterias(new HashSet<>());
+        } else {
+            aluno.getMaterias().clear();
+        }
+
+        if (materiaIds == null || materiaIds.isEmpty()) {
             return;
         }
 
@@ -111,6 +116,7 @@ public class AlunoService {
             throw new EntityNotFoundException("Uma ou mais matérias informadas não foram encontradas!");
         }
 
-        aluno.setMaterias(new HashSet<>(materiasEncontradas));
+        // Altera apenas o conteúdo da coleção, evitando criar uma nova
+        aluno.getMaterias().addAll(materiasEncontradas);
     }
 }
