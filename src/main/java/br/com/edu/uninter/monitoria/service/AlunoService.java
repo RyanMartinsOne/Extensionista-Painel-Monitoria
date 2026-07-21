@@ -57,6 +57,13 @@ public class AlunoService {
                 .toList();
     }
 
+    public AlunoResponse listarPorId(Long id) {
+        Aluno aluno = alunoRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Não existe aluno com id: " + id));
+
+        return alunoMapper.toDto(aluno);
+    }
+
     @Transactional
     public AlunoResponse salvarAluno(AlunoRequest request) {
         Aluno aluno = alunoMapper.toEntity(request);
