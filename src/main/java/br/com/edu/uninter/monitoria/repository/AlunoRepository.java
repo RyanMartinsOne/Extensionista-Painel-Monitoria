@@ -12,10 +12,12 @@ public interface AlunoRepository extends JpaRepository<Aluno, Long> {
 
     List<Aluno> findByTipo (TipoAluno tipo);
 
-    // Distinc evita repetir aluno mesmo se ele tiver várias materias
+    // Distinct evita repetir aluno mesmo se ele tiver várias materias
     @Query("SELECT DISTINCT a FROM Aluno a LEFT JOIN FETCH a.materias WHERE a.tipo = :tipo")
     List<Aluno> findByTipoWithMaterias(@Param("tipo") TipoAluno tipo);
 
     @Query("SELECT DISTINCT a FROM Aluno a JOIN a.materias m WHERE m.id = :materiaId")
     List<Aluno> findByMateriaId(@Param("materiaId") Long materiaId);
+
+    boolean existsByMaterias_Id(Long materiaId);
 }
