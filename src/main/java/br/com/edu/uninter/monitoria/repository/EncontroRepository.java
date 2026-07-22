@@ -8,7 +8,9 @@ import java.util.List;
 
 public interface EncontroRepository extends JpaRepository<Encontro, Long> {
     List<Encontro> findByStatus(StatusEncontro status);
-    Long countByStatus(StatusEncontro status);
+    int countByStatus(StatusEncontro status);
+    List<Encontro> findByMateriaId(Long id);
+    List<Encontro> findByMonitorIdOrBeneficiadoId(Long monitorId, Long beneficiadoId);
     boolean existsByMonitorIdOrBeneficiadoId(Long monitorId, Long beneficiadoId);
     boolean existsByMateriaId(Long materiaId);
 }
