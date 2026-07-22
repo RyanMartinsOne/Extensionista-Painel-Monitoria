@@ -3,6 +3,7 @@ package br.com.edu.uninter.monitoria.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,6 +14,7 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor
 @Table(name = "aluno")
 public class Aluno {
@@ -30,12 +32,13 @@ public class Aluno {
     @Enumerated(EnumType.STRING)
     private TipoAluno tipo;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(
             name = "aluno_materia",
             joinColumns = @JoinColumn(name = "aluno_id"),
             inverseJoinColumns = @JoinColumn(name = "materia_id")
     )
+    @EqualsAndHashCode.Include
     private Set<Materia> materias =  new HashSet<>();
 
     @ElementCollection
