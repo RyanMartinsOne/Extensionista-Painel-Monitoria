@@ -57,6 +57,7 @@ public class AlunoService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public AlunoResponse listarPorId(Long id) {
         Aluno aluno = alunoRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Não existe aluno com id: " + id));
