@@ -1,6 +1,6 @@
 package br.com.edu.uninter.monitoria.service;
 
-import br.com.edu.uninter.monitoria.dto.MateriaDTO;
+import br.com.edu.uninter.monitoria.dto.MateriaRequest;
 import br.com.edu.uninter.monitoria.dto.MateriaResponse;
 import br.com.edu.uninter.monitoria.mapper.MateriaMapper;
 import br.com.edu.uninter.monitoria.model.Materia;
@@ -42,18 +42,18 @@ public class MateriaService {
     }
 
     @Transactional
-    public MateriaResponse criarMateria(MateriaDTO materiaDTO) {
-        Materia materia = materiaMapper.toEntity(materiaDTO);
+    public MateriaResponse criarMateria(MateriaRequest materiaRequest) {
+        Materia materia = materiaMapper.toEntity(materiaRequest);
         materiaRepository.save(materia);
         return materiaMapper.toDto(materia);
     }
 
     @Transactional
-    public MateriaResponse atualizarMateria(Long id, MateriaDTO materiaDTO) {
+    public MateriaResponse atualizarMateria(Long id, MateriaRequest materiaRequest) {
         Materia materia = materiaRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Não existe matéria com id: " + id));
 
-        materia.setNome(materiaDTO.nome());
+        materia.setNome(materiaRequest.nome());
         materiaRepository.save(materia);
         return materiaMapper.toDto(materia);
     }
