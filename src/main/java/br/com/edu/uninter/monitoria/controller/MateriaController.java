@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController("/materia")
+@RestController
+@RequestMapping("/materia")
 @RequiredArgsConstructor
 public class MateriaController {
 

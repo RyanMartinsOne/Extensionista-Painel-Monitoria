@@ -7,7 +7,7 @@ import java.util.Set;
 public record AlunoResponse(
         Long id,
         String nome,
-        String numero,
+        String telefone,
         TipoAluno tipo,
         Set<MateriaResponse> materias,
         Set<String> disponibilidade

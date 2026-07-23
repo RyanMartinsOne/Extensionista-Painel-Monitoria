@@ -12,8 +12,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController("/aluno")
+@RestController
 @RequiredArgsConstructor
+@RequestMapping("/aluno")
 public class AlunoController {
 
     private final AlunoService alunoService;
