@@ -42,14 +42,14 @@ public class MateriaService {
     }
 
     @Transactional
-    public MateriaResponse criarMateria(MateriaRequest materiaRequest) {
+    public MateriaResponse criar(MateriaRequest materiaRequest) {
         Materia materia = materiaMapper.toEntity(materiaRequest);
         materiaRepository.save(materia);
         return materiaMapper.toDto(materia);
     }
 
     @Transactional
-    public MateriaResponse atualizarMateria(Long id, MateriaRequest materiaRequest) {
+    public MateriaResponse atualizar(Long id, MateriaRequest materiaRequest) {
         Materia materia = materiaRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Não existe matéria com id: " + id));
 
@@ -59,7 +59,7 @@ public class MateriaService {
     }
 
     @Transactional
-    public void removerMateria(Long id) {
+    public void remover(Long id) {
         Materia materia = materiaRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Não existe matéria com id: " + id));
 

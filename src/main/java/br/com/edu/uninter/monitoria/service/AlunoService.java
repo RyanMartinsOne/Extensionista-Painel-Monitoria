@@ -66,7 +66,7 @@ public class AlunoService {
     }
 
     @Transactional
-    public AlunoResponse salvarAluno(AlunoRequest request) {
+    public AlunoResponse criar(AlunoRequest request) {
         Aluno aluno = alunoMapper.toEntity(request);
 
         vincularMaterias(aluno, request.materiaIds());
@@ -77,7 +77,7 @@ public class AlunoService {
     }
 
     @Transactional
-    public AlunoResponse atualizarAluno(Long id, AlunoRequest request) {
+    public AlunoResponse atualizar(Long id, AlunoRequest request) {
         Aluno aluno = alunoRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Não existe aluno com id: " + id));
 
@@ -94,7 +94,7 @@ public class AlunoService {
     }
 
     @Transactional
-    public void removerAluno(Long id) {
+    public void remover(Long id) {
 
         if (!alunoRepository.existsById(id)) {
             throw new EntityNotFoundException("Não existe aluno com id: " + id);
