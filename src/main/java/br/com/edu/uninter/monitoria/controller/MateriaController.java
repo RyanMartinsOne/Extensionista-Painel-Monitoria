@@ -30,7 +30,7 @@ public class MateriaController {
     }
 
     @PostMapping
-    public ResponseEntity<MateriaResponse> salvar(@Valid @RequestBody MateriaRequest materiaRequest) {
+    public ResponseEntity<MateriaResponse> criar(@Valid @RequestBody MateriaRequest materiaRequest) {
         MateriaResponse response = materiaService.criar(materiaRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
