@@ -43,8 +43,8 @@ public class EncontroService {
     }
 
     @Transactional(readOnly = true)
-    public List<EncontroResponse> listarPorMateriaId(Long id) {
-        List<Encontro> encontro = encontroRepository.findByMateriaId(id);
+    public List<EncontroResponse> listarPorMateria(Materia materia) {
+        List<Encontro> encontro = encontroRepository.findByMateria(materia);
 
         return encontro.stream()
                 .map(encontroMapper::toDto)

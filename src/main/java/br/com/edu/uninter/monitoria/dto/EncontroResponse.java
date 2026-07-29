@@ -8,7 +8,7 @@ public record EncontroResponse(
         Long id,
         AlunoResponse monitor,
         AlunoResponse beneficiado,
-        MateriaResponse materia,
+        Materia materia,
         StatusEncontro status,
         LocalDateTime dataHora,
         String observacoes

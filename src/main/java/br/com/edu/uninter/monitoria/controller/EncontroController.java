@@ -38,10 +38,10 @@ public class EncontroController {
         return ResponseEntity.ok(encontroResponse);
     }
 
-    @GetMapping("/materia/{id}")
-    public ResponseEntity<List<EncontroResponse>> listarPorMateria(@PathVariable Long id){
-        List<EncontroResponse> encontroResponse = encontroService.listarPorMateriaId(id);
-        return ResponseEntity.ok(encontroResponse);
+    @GetMapping("/materia")
+    public ResponseEntity<List<EncontroResponse>> listarPorMateria(@RequestParam Materia materia){
+        List<EncontroResponse> response = encontroService.listarPorMateria(materia);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/aluno/{id}")
