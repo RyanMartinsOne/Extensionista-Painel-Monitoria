@@ -1,6 +1,6 @@
 package br.com.edu.uninter.monitoria.model;
 
-public enum TipoAluno {
+public enum TipoUsuario {
     MONITOR,
-    BENEFICIADO
+    COORDENADOR
 }
