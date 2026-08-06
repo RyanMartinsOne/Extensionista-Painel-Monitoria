@@ -1,5 +1,6 @@
 package br.com.edu.uninter.monitoria.dto;
 
+import br.com.edu.uninter.monitoria.model.Materia;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
@@ -11,8 +12,8 @@ public record EncontroRequest(
         @NotNull(message = "A matéria é obrigatória")
         Materia materia,
 
-        @NotNull(message = "O id da matéria é obrigatório")
-        Long materiaId,
+        String assunto,
+        String telefone,
 
         @NotNull(message = "A data e hora são obrigatórias")
         LocalDateTime dataHora,

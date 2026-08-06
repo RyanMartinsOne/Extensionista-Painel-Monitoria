@@ -38,7 +38,7 @@ public class EncontroService {
     @Transactional(readOnly = true)
     public EncontroResponse listarPorId(Long id) {
         Encontro encontro = encontroRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException(
+                .orElseThrow(() -> new EntityNotFoundException(
                         "Não existe encontro com id " + id
                 ));
 
@@ -73,21 +73,18 @@ public class EncontroService {
     }
 
     @Transactional(readOnly = true)
-    public int quantidadePorStatus(StatusEncontro status) {
+    public long quantidadePorStatus(StatusEncontro status) {
         return encontroRepository.countByStatus(status);
     }
 
     @Transactional
-    public EncontroResponse criar(EncontroRequest request) {
-        DadosEncontro dados = validarDadosEncontro(request);
-
+    public EncontroResponse criar(EncontroRequest request, Usuario monitorLogado) {
         Encontro encontro = encontroMapper.toEntity(request);
-        encontro.setMonitor(dados.monitor());
-        encontro.setBeneficiado(dados.beneficiado());
-        encontro.setMateria(dados.materia());
+        encontro.setMonitor(monitorLogado);
         encontro.setStatus(StatusEncontro.AGENDADO);
 
-        return encontroMapper.toDto(encontroRepository.save(encontro));
+        Encontro encontroNovo = encontroRepository.save(encontro);
+        return encontroMapper.toDto(encontroNovo);
     }
 
     @Transactional
@@ -102,11 +99,17 @@ public class EncontroService {
         encontro.setDataHora(request.dataHora());
         encontro.setObservacoes(request.observacoes());
 
-        encontro.setMonitor(dados.monitor());
-        encontro.setBeneficiado(dados.beneficiado());
-        encontro.setMateria(dados.materia());
+        Encontro encontroAtualizado = encontroRepository.save(encontro);
+        return encontroMapper.toDto(encontroAtualizado);
+    }
 
-        return encontroMapper.toDto(encontro);
+    public EncontroResponse atualizarStatus(Long id, StatusEncontro status) {
+        Encontro encontro = encontroRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Não existe encontro com id: " + id));
+
+        encontro.setStatus(status);
+        Encontro encontroAtualizado = encontroRepository.save(encontro);
+        return encontroMapper.toDto(encontroAtualizado);
     }
 
     @Transactional
@@ -117,42 +120,5 @@ public class EncontroService {
                 ));
 
         encontroRepository.delete(encontro);
-    }
-
-    private DadosEncontro validarDadosEncontro(EncontroRequest request) {
-        Aluno monitor = alunoRepository.findById(request.monitorId())
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "Não existe aluno monitor com id: " + request.monitorId()
-                ));
-
-        Aluno beneficiado = alunoRepository.findById(request.beneficiadoId())
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "Não existe aluno beneficiado com id: " + request.beneficiadoId()
-                ));
-
-        Materia materia = materiaRepository.findById(request.materiaId())
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "Não existe matéria com id: " + request.materiaId()
-                ));
-
-        if (monitor.getId().equals(beneficiado.getId())) {
-            throw new IllegalArgumentException(
-                    "O aluno beneficiado e o monitor devem ser pessoas diferentes"
-            );
-        }
-
-        if (monitor.getTipo() != TipoAluno.MONITOR) {
-            throw new IllegalArgumentException(
-                    "O aluno informado como monitor não possui tipo MONITOR"
-            );
-        }
-
-        if (!monitor.getMaterias().contains(materia)) {
-            throw new IllegalArgumentException(
-                    "O monitor não está vinculado à matéria " + materia.getNome()
-            );
-        }
-
-        return new DadosEncontro(monitor, beneficiado, materia);
     }
 }

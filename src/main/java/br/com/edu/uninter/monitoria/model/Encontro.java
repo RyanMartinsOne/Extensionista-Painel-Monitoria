@@ -1,7 +1,6 @@
 package br.com.edu.uninter.monitoria.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,7 +10,6 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
-@Table(name = "encontro")
 @NoArgsConstructor
 public class Encontro {
 
@@ -31,12 +29,14 @@ public class Encontro {
     @Column(nullable = false)
     private Materia materia;
 
-    @NotNull
+    private String assunto;
+
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private StatusEncontro status = StatusEncontro.AGENDADO;
 
-    @NotNull
     private LocalDateTime dataHora;
 
+    @Column(length = 1000)
     private String observacoes;
 }

@@ -8,7 +8,7 @@ import org.mapstruct.Mapping;
 
 @Mapper(
         componentModel = "spring",
-        uses = {AlunoMapper.class, MateriaMapper.class}
+        uses = UsuarioMapper.class
 )
 public interface EncontroMapper {
 
