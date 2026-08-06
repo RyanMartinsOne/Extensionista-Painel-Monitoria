@@ -14,8 +14,7 @@ public interface EncontroMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "monitor", ignore = true)
-    @Mapping(target = "beneficiado", ignore = true)
-    @Mapping(target = "materia", ignore = true)
+    @Mapping(target = "status", ignore = true)
     Encontro toEntity(EncontroRequest request);
 
     EncontroResponse toDto(Encontro encontro);

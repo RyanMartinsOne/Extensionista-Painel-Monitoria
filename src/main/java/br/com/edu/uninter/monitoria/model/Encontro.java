@@ -19,19 +19,16 @@ public class Encontro {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "monitor_id", nullable = false)
-    @NotNull
-    private Aluno monitor;
+    @ManyToOne(optional = false)
+    @JoinColumn(nullable = false)
+    private Usuario monitor;
 
-    @ManyToOne
-    @JoinColumn(name = "beneficiado_id", nullable = false)
-    @NotNull
-    private Aluno beneficiado;
+    @Column(nullable = false)
+    private String beneficiado;
+    private String telefone;
 
-    @ManyToOne
-    @JoinColumn(name = "materia_id",  nullable = false)
-    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Materia materia;
 
     @NotNull

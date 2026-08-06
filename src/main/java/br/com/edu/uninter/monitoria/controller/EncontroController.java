@@ -2,7 +2,9 @@ package br.com.edu.uninter.monitoria.controller;
 
 import br.com.edu.uninter.monitoria.dto.EncontroRequest;
 import br.com.edu.uninter.monitoria.dto.EncontroResponse;
+import br.com.edu.uninter.monitoria.model.Materia;
 import br.com.edu.uninter.monitoria.model.StatusEncontro;
+import br.com.edu.uninter.monitoria.model.Usuario;
 import br.com.edu.uninter.monitoria.service.EncontroService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -44,9 +46,9 @@ public class EncontroController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/aluno/{id}")
-    public ResponseEntity<List<EncontroResponse>> listarPorAluno(@PathVariable Long id){
-        List<EncontroResponse> encontroResponse = encontroService.listarPorAluno(id);
+    @GetMapping("/aluno")
+    public ResponseEntity<List<EncontroResponse>> listarPorNomeAluno(@RequestParam String nomeAluno){
+        List<EncontroResponse> encontroResponse = encontroService.listarPorNomeAluno(nomeAluno);
         return ResponseEntity.ok(encontroResponse);
     }
 

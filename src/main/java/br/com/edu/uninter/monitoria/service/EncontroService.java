@@ -1,13 +1,10 @@
 package br.com.edu.uninter.monitoria.service;
 
-import br.com.edu.uninter.monitoria.dto.DadosEncontro;
 import br.com.edu.uninter.monitoria.dto.EncontroRequest;
 import br.com.edu.uninter.monitoria.dto.EncontroResponse;
 import br.com.edu.uninter.monitoria.mapper.EncontroMapper;
 import br.com.edu.uninter.monitoria.model.*;
-import br.com.edu.uninter.monitoria.repository.AlunoRepository;
 import br.com.edu.uninter.monitoria.repository.EncontroRepository;
-import br.com.edu.uninter.monitoria.repository.MateriaRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,14 +16,20 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EncontroService {
 
-    private final AlunoRepository alunoRepository;
-    private final MateriaRepository materiaRepository;
     private final EncontroRepository encontroRepository;
     private final EncontroMapper encontroMapper;
 
     @Transactional(readOnly = true)
     public List<EncontroResponse> listarTodos() {
         List<Encontro> encontro = encontroRepository.findAll();
+        return encontro.stream()
+                .map(encontroMapper::toDto)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<EncontroResponse> listarPorMonitor(Usuario  usuario) {
+        List<Encontro> encontro = encontroRepository.findByMonitor(usuario);
         return encontro.stream()
                 .map(encontroMapper::toDto)
                 .toList();
@@ -52,9 +55,8 @@ public class EncontroService {
     }
 
     @Transactional(readOnly = true)
-    public List<EncontroResponse> listarPorAluno(Long id) {
-        List<Encontro> encontro = encontroRepository.findByMonitorIdOrBeneficiadoId(id, id);
-
+    public List<EncontroResponse> listarPorNomeAluno(String nome) {
+        List<Encontro> encontro = encontroRepository.findByMonitor_NomeOrBeneficiado(nome, nome);
         return encontro.stream()
                 .map(encontroMapper::toDto)
                 .toList();
@@ -91,12 +93,12 @@ public class EncontroService {
     @Transactional
     public EncontroResponse atualizar(Long id, EncontroRequest request) {
         Encontro encontro = encontroRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "Não existe encontro com id: " + id
-                ));
+                .orElseThrow(() -> new EntityNotFoundException("Não existe encontro com id: " + id));
 
-        DadosEncontro dados = validarDadosEncontro(request);
-
+        encontro.setBeneficiado(request.beneficiado());
+        encontro.setMateria(request.materia());
+        encontro.setAssunto(request.assunto());
+        encontro.setTelefone(request.telefone());
         encontro.setDataHora(request.dataHora());
         encontro.setObservacoes(request.observacoes());
 

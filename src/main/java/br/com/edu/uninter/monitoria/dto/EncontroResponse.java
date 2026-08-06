@@ -6,8 +6,8 @@ import java.time.LocalDateTime;
 
 public record EncontroResponse(
         Long id,
-        AlunoResponse monitor,
-        AlunoResponse beneficiado,
+        UsuarioResponse monitor,
+        String beneficiado,
         Materia materia,
         StatusEncontro status,
         LocalDateTime dataHora,
