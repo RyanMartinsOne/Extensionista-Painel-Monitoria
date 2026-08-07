@@ -45,7 +45,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/materia")
-    public ResponseEntity<List<UsuarioResponse>> listarPorMateria(@RequestBody Materia materia) {
+    public ResponseEntity<List<UsuarioResponse>> listarPorMateria(@RequestParam Materia materia) {
         List<UsuarioResponse> response = usuarioService.listarPorMateria(materia);
         return ResponseEntity.ok(response);
     }
