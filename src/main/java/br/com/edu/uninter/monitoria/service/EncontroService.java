@@ -28,7 +28,7 @@ public class EncontroService {
     }
 
     @Transactional(readOnly = true)
-    public List<EncontroResponse> listarPorMonitor(Usuario  usuario) {
+    public List<EncontroResponse> listar(Usuario  usuario) {
         List<Encontro> encontro = encontroRepository.findByMonitor(usuario);
         return encontro.stream()
                 .map(encontroMapper::toDto)

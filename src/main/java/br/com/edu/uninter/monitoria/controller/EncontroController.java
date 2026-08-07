@@ -33,7 +33,7 @@ public class EncontroController {
             return ResponseEntity.ok(response);
         }
 
-        List<EncontroResponse> response = encontroService.listarPorMonitor(usuario);
+        List<EncontroResponse> response = encontroService.listar(usuario);
         return ResponseEntity.ok(response);
     }
 
