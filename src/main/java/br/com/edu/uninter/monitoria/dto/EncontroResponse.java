@@ -11,6 +11,7 @@ public record EncontroResponse(
         String beneficiado,
         Materia materia,
         String assunto,
+        String telefone,
         StatusEncontro status,
         LocalDateTime dataHora,
         String observacoes
