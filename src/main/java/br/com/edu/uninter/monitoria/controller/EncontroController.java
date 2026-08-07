@@ -24,7 +24,15 @@ public class EncontroController {
 
 
     @GetMapping
-    public ResponseEntity<List<EncontroResponse>> listarPorMonitor(@AuthenticationPrincipal Usuario usuario){
+    public ResponseEntity<List<EncontroResponse>> listarPorMonitor(
+            @AuthenticationPrincipal Usuario usuario,
+            @RequestParam(required = false) StatusEncontro status
+    ){
+        if (status != null) {
+            List<EncontroResponse> response = encontroService.listarPorStatus(status);
+            return ResponseEntity.ok(response);
+        }
+
         List<EncontroResponse> response = encontroService.listarPorMonitor(usuario);
         return ResponseEntity.ok(response);
     }
@@ -81,7 +89,7 @@ public class EncontroController {
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/status/{id}")
+    @PatchMapping("/status/{id}")
     public ResponseEntity<EncontroResponse> atualizarStatus(@PathVariable Long id, @Valid @RequestBody StatusEncontro status){
         EncontroResponse response = encontroService.atualizarStatus(id, status);
         return ResponseEntity.ok(response);
