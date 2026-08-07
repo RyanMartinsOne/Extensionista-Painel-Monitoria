@@ -2,21 +2,34 @@ package br.com.edu.uninter.monitoria.controller;
 
 import br.com.edu.uninter.monitoria.dto.UsuarioRequest;
 import br.com.edu.uninter.monitoria.dto.UsuarioResponse;
+import br.com.edu.uninter.monitoria.mapper.UsuarioMapper;
 import br.com.edu.uninter.monitoria.model.Materia;
+import br.com.edu.uninter.monitoria.model.Usuario;
 import br.com.edu.uninter.monitoria.service.UsuarioService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/user")
+@RequestMapping("/usuario")
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
+    private final UsuarioMapper usuarioMapper;
+
+    @GetMapping("/eu")
+    public ResponseEntity<UsuarioResponse> eu(
+            @AuthenticationPrincipal Usuario usuario
+    ){
+        System.out.println("Usuário autenticado: " + usuario);
+
+        return ResponseEntity.ok(usuarioMapper.toDto(usuario));
+    }
 
     @GetMapping
     public ResponseEntity<List<UsuarioResponse>> listar() {
