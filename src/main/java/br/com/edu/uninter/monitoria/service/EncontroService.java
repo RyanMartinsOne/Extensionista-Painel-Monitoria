@@ -55,9 +55,27 @@ public class EncontroService {
     }
 
     @Transactional(readOnly = true)
+    public List<EncontroResponse> listarPorMonitor(Long id) {
+        List<Encontro> encontro = encontroRepository.findByMonitor_Id(id);
+        return encontro.stream()
+                .map(encontroMapper::toDto)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
     public List<EncontroResponse> listarPorNomeAluno(String nome) {
         List<Encontro> encontro = encontroRepository.findByMonitor_NomeOrBeneficiado(nome, nome);
         return encontro.stream()
+                .map(encontroMapper::toDto)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<EncontroResponse> listarPorStatusEUsuario(StatusEncontro status, Usuario usuario) {
+        List<Encontro> encontro = encontroRepository.findByStatusAndMonitor(status, usuario);
+
+        return encontro
+                .stream()
                 .map(encontroMapper::toDto)
                 .toList();
     }
@@ -121,4 +139,5 @@ public class EncontroService {
 
         encontroRepository.delete(encontro);
     }
+
 }

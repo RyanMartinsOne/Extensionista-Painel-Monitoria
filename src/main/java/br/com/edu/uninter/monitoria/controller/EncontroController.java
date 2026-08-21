@@ -29,25 +29,12 @@ public class EncontroController {
             @RequestParam(required = false) StatusEncontro status
     ){
         if (status != null) {
-            List<EncontroResponse> response = encontroService.listarPorStatus(status);
+            List<EncontroResponse> response = encontroService.listarPorStatusEUsuario(status, usuario);
             return ResponseEntity.ok(response);
         }
 
         List<EncontroResponse> response = encontroService.listar(usuario);
         return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/all")
-    public ResponseEntity<List<EncontroResponse>> listarTodos(
-            @RequestParam(required = false) StatusEncontro status
-    ) {
-        if (status != null) {
-            List<EncontroResponse> response = encontroService.listarPorStatus(status);
-            return ResponseEntity.ok(response);
-        }
-        List<EncontroResponse> response = encontroService.listarTodos();
-
-       return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
