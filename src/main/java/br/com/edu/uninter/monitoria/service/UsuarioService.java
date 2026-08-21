@@ -3,7 +3,6 @@ package br.com.edu.uninter.monitoria.service;
 import br.com.edu.uninter.monitoria.dto.UsuarioRequest;
 import br.com.edu.uninter.monitoria.dto.UsuarioResponse;
 import br.com.edu.uninter.monitoria.mapper.UsuarioMapper;
-import br.com.edu.uninter.monitoria.model.Materia;
 import br.com.edu.uninter.monitoria.model.Usuario;
 import br.com.edu.uninter.monitoria.repository.UsuarioRepository;
 import br.com.edu.uninter.monitoria.repository.EncontroRepository;
@@ -23,29 +22,12 @@ public class UsuarioService {
     private final EncontroRepository encontroRepository;
 
     @Transactional(readOnly = true)
-    public List<UsuarioResponse> listarPorMateria(Materia materia) {
-        List<Usuario> usuarios = usuarioRepository.findByMateria(materia);
-
-        return usuarios.stream()
-                .map(usuarioMapper::toDto)
-                .toList();
-    }
-
-    @Transactional(readOnly = true)
     public List<UsuarioResponse> listarTodos() {
         List<Usuario> usuarios = usuarioRepository.findAll();
 
         return usuarios.stream()
                 .map(usuarioMapper::toDto)
                 .toList();
-    }
-
-    @Transactional(readOnly = true)
-    public UsuarioResponse listarPorId(Long id) {
-        Usuario usuario = usuarioRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Não existe usuário com id: " + id));
-
-        return usuarioMapper.toDto(usuario);
     }
 
     @Transactional

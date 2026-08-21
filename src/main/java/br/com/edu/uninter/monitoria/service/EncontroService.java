@@ -36,35 +36,8 @@ public class EncontroService {
     }
 
     @Transactional(readOnly = true)
-    public EncontroResponse listarPorId(Long id) {
-        Encontro encontro = encontroRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "Não existe encontro com id " + id
-                ));
-
-        return encontroMapper.toDto(encontro);
-    }
-
-    @Transactional(readOnly = true)
-    public List<EncontroResponse> listarPorMateria(Materia materia) {
-        List<Encontro> encontro = encontroRepository.findByMateria(materia);
-
-        return encontro.stream()
-                .map(encontroMapper::toDto)
-                .toList();
-    }
-
-    @Transactional(readOnly = true)
     public List<EncontroResponse> listarPorMonitor(Long id) {
         List<Encontro> encontro = encontroRepository.findByMonitor_Id(id);
-        return encontro.stream()
-                .map(encontroMapper::toDto)
-                .toList();
-    }
-
-    @Transactional(readOnly = true)
-    public List<EncontroResponse> listarPorNomeAluno(String nome) {
-        List<Encontro> encontro = encontroRepository.findByMonitor_NomeOrBeneficiado(nome, nome);
         return encontro.stream()
                 .map(encontroMapper::toDto)
                 .toList();
