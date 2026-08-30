@@ -1,5 +1,6 @@
 package br.com.edu.uninter.monitoria.service;
 
+import br.com.edu.uninter.monitoria.dto.EncontroFilter;
 import br.com.edu.uninter.monitoria.dto.EncontroRequest;
 import br.com.edu.uninter.monitoria.dto.EncontroResponse;
 import br.com.edu.uninter.monitoria.mapper.EncontroMapper;
@@ -20,8 +21,8 @@ public class EncontroService {
     private final EncontroMapper encontroMapper;
 
     @Transactional(readOnly = true)
-    public List<EncontroResponse> listarTodos() {
-        List<Encontro> encontro = encontroRepository.findAll();
+    public List<EncontroResponse> listarDashboard(EncontroFilter filter) {
+        List<Encontro> encontro = encontroRepository.findWithFilters(filter.status(), filter.materia());
         return encontro.stream()
                 .map(encontroMapper::toDto)
                 .toList();

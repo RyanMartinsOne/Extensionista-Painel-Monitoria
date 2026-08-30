@@ -22,7 +22,14 @@ public class UsuarioService {
     private final EncontroRepository encontroRepository;
 
     @Transactional(readOnly = true)
-    public List<UsuarioResponse> listarTodos() {
+    public List<UsuarioResponse> listarDashboard(Materia materia) {
+        if (materia != null) {
+            List<Usuario> usuarios = usuarioRepository.findByMateria(materia);
+
+            return usuarios.stream()
+                    .map(usuarioMapper::toDto)
+                    .toList();
+        }
         List<Usuario> usuarios = usuarioRepository.findAll();
 
         return usuarios.stream()
