@@ -55,16 +55,6 @@ public class EncontroService {
     }
 
     @Transactional(readOnly = true)
-    public List<EncontroResponse> listarPorStatus(StatusEncontro status) {
-        List<Encontro> encontro = encontroRepository.findByStatus(status);
-
-        return encontro
-                .stream()
-                .map(encontroMapper::toDto)
-                .toList();
-    }
-
-    @Transactional(readOnly = true)
     public long quantidadePorStatus(StatusEncontro status) {
         return encontroRepository.countByStatus(status);
     }
