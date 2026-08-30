@@ -19,4 +19,16 @@ public interface EncontroRepository extends JpaRepository<Encontro, Long> {
     boolean existsByMonitor_Id(Long id);
 
     List<Encontro> findByMonitor_Id(Long monitorId);
+
+    // Se não for passado um filtro seu valor fica nulo
+    @Query("""
+        SELECT e
+        FROM Encontro e
+        WHERE (:status IS NULL OR e.status = :status)
+            AND (:materia IS NULL OR e.materia = :materia)
+    """)
+    List<Encontro> findWithFilters(
+            StatusEncontro status,
+            Materia materia
+    );
 }

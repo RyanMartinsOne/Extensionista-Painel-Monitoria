@@ -1,7 +1,9 @@
 package br.com.edu.uninter.monitoria.controller;
 
+import br.com.edu.uninter.monitoria.dto.EncontroFilter;
 import br.com.edu.uninter.monitoria.dto.EncontroResponse;
 import br.com.edu.uninter.monitoria.dto.UsuarioResponse;
+import br.com.edu.uninter.monitoria.model.Materia;
 import br.com.edu.uninter.monitoria.service.EncontroService;
 import br.com.edu.uninter.monitoria.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
@@ -19,14 +21,10 @@ public class DashboardController {
     private final UsuarioService usuarioService;
 
     @GetMapping("/encontros")
-    public ResponseEntity<List<EncontroResponse>> listarEncontros() {
-        List<EncontroResponse> response = encontroService.listarTodos();
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/usuarios")
-    public ResponseEntity<List<UsuarioResponse>> listarUsuarios() {
-        List<UsuarioResponse> response = usuarioService.listarTodos();
+    public ResponseEntity<List<EncontroResponse>> listarEncontros(
+            @ModelAttribute EncontroFilter filter
+    ) {
+        List<EncontroResponse> response = encontroService.listarDashboard(filter);
         return ResponseEntity.ok(response);
     }
 
