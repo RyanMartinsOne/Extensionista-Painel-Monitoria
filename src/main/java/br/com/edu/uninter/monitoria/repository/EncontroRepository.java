@@ -13,9 +13,7 @@ public interface EncontroRepository extends JpaRepository<Encontro, Long> {
     List<Encontro> findByStatus(StatusEncontro status);
     List<Encontro>  findByStatusAndMonitor(StatusEncontro status, Usuario usuario);
     long countByStatus(StatusEncontro status);
-    List<Encontro> findByMateria(Materia materia);
     List<Encontro> findByMonitor(Usuario usuario);
-    List<Encontro> findByMonitor_NomeOrBeneficiado(String monitor, String beneficiado);
 
     boolean existsByMonitor_Id(Long id);
 
