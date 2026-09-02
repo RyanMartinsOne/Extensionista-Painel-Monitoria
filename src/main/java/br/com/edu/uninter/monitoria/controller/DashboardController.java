@@ -33,4 +33,19 @@ public class DashboardController {
         List<EncontroResponse> response = encontroService.listarPorMonitor(id);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/usuarios")
+    public ResponseEntity<List<UsuarioResponse>> listarUsuarios(
+            @RequestParam(required = false) Materia materia
+            ) {
+        List<UsuarioResponse> response = usuarioService.listarDashboard(materia);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/usuarios/{id}")
+    public ResponseEntity<UsuarioResponse> listarUsuarioPorId(@PathVariable Long id) {
+        UsuarioResponse response = usuarioService.buscarPorId(id);
+        return ResponseEntity.ok(response);
+    }
+
 }
