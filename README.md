@@ -85,6 +85,7 @@ coordenadores com informações estatísticas.
 
 A API foi desenvolvida utilizando uma arquitetura organizada em camadas:
 
+```text
 Controller
     ↓
 Service
@@ -92,6 +93,7 @@ Service
 Repository
     ↓
 Database
+```
 
 ### Principais responsabilidades
 
