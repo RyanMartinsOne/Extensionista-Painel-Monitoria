@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +20,7 @@ public class EncontroService {
 
     private final EncontroRepository encontroRepository;
     private final EncontroMapper encontroMapper;
+    private final MonitoriaImageService imageService;
 
     @Transactional(readOnly = true)
     public List<EncontroResponse> listarDashboard(EncontroFilter filter) {
@@ -101,7 +103,12 @@ public class EncontroService {
                         "Não existe encontro com id: " + id
                 ));
 
+        Optional<String> chaveObjeto = imageService.removerRegistroSeExistir(id);
+
         encontroRepository.delete(encontro);
+
+        // A limpeza no OCI fica para o fim, depois dos registros removidos
+        chaveObjeto.ifPresent(imageService::limparObjetoSilenciosamente);
     }
 
 }
