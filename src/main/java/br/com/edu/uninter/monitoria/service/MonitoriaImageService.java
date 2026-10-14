@@ -1,21 +1,30 @@
 package br.com.edu.uninter.monitoria.service;
 
+import br.com.edu.uninter.monitoria.exception.ImageExistException;
+import br.com.edu.uninter.monitoria.exception.ImageNotFoundException;
 import br.com.edu.uninter.monitoria.model.Encontro;
 import br.com.edu.uninter.monitoria.model.MonitoriaImage;
 import br.com.edu.uninter.monitoria.repository.EncontroRepository;
 import br.com.edu.uninter.monitoria.repository.MonitoriaImageRepository;
+import jakarta.persistence.EntityNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class MonitoriaImageService {
 
     private static final String IMAGE_TYPE = "image/jpeg";
+
+    private static final Logger log =
+            LoggerFactory.getLogger(MonitoriaImageService.class);
 
     private final MonitoriaImageRepository imageRepository;
     private final EncontroRepository encontroRepository;
@@ -41,14 +50,12 @@ public class MonitoriaImageService {
     ) throws IOException {
 
         if (imageRepository.findByEncontroId(encontroId).isPresent()) {
-            throw new IllegalArgumentException(
-                    "Este encontro já possui uma imagem."
-            );
+            throw new ImageExistException();
         }
 
         Encontro encontro = encontroRepository.findById(encontroId)
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "Encontro não encontrado."
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Não existe encontro com id: " + encontroId
                 ));
 
         byte[] conteudo = compressor.compress(file);
@@ -89,9 +96,7 @@ public class MonitoriaImageService {
 
         MonitoriaImage image = imageRepository
                 .findByEncontroId(encontroId)
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "Este encontro não possui imagem."
-                ));
+                .orElseThrow(ImageNotFoundException::new);
 
         try (InputStream entrada =
                      storage.obterImagem(image.getObjectKey())) {
@@ -108,13 +113,30 @@ public class MonitoriaImageService {
 
         MonitoriaImage image = imageRepository
                 .findByEncontroId(encontroId)
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "Este encontro não possui imagem."
-                ));
+                .orElseThrow(ImageNotFoundException::new);
 
         storage.excluirImagem(image.getObjectKey());
 
         imageRepository.delete(image);
+    }
+
+    @Transactional
+    public Optional<String> removerRegistroSeExistir(Long encontroId) {
+        return imageRepository.findByEncontroId(encontroId)
+                .map(image -> {
+                    String chave = image.getObjectKey();
+                    imageRepository.delete(image);
+                    imageRepository.flush();
+                    return chave;
+                });
+    }
+
+    public void limparObjetoSilenciosamente(String chaveObjeto) {
+        try {
+            storage.excluirImagem(chaveObjeto);
+        } catch (RuntimeException e) {
+            log.warn("Objeto órfão no bucket: {}", chaveObjeto, e);
+        }
     }
 
     public record ImageContent(
