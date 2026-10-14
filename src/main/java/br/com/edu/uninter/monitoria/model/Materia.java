@@ -12,5 +12,6 @@ public enum Materia {
     GEOGRAFIA,
     FILOSOFIA,
     SOCIOLOGIA,
-    ARTES
+    ARTES,
+    OUTROS
 }
